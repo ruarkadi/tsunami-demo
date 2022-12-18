@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tsunami-demo
+spec:
+  replicas: 1
+  minReadySeconds: 10
+  selector:
+    matchLabels:
+      app: tsunami-demo
+  template:
+    metadata:
+      labels:
+        app: tsunami-demo
+    spec:
+      containers:
+      - name: tsunami-demo
+        image: ruarkadi/tsunami-demo:latest
+        resources:
+          limits:
+            memory: 8G
+            cpu: "1"
+          requests:
+            memory: 256M
+            cpu: "0.2"
+        ports:
+        - containerPort: 5000
+        readinessProbe:
+          tcpSocket:
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 20
